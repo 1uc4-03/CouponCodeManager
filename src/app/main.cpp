@@ -24,6 +24,8 @@ int main() {
 
         cout << "Input command: ";
         cin >> command;
+        cin.clear();
+        fflush(stdin);
 
         if (Commands::commands.find(command) != Commands::commands.end()) {
             Commands::commands[command]();

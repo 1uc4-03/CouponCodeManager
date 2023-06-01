@@ -46,6 +46,11 @@ namespace Features {
         cin >> date;
         cout << endl;
 
+        if (date.length() != 10) {
+            cout << "Wrong date length. Try again." << endl;
+            return getCodeValues();
+        }
+
         std::transform(brandName.begin(), brandName.end(), brandName.begin(), ::toupper);
         std::transform(coupon.begin(), coupon.end(), coupon.begin(), ::toupper);
         std::transform(effect.begin(), effect.end(), effect.begin(), ::toupper);
@@ -56,6 +61,7 @@ namespace Features {
     void writeClearFile(json & data, fstream & file) {
 
         file << std::setw(4) << data.dump() << endl;
+        file.flush();
         file.close();
     }
 
