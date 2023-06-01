@@ -55,7 +55,7 @@ namespace Features {
 
     void writeClearFile(json & data, fstream & file) {
 
-        file << data;
+        file << std::setw(4) << data.dump() << endl;
         file.close();
     }
 
