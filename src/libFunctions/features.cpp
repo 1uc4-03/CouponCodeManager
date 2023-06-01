@@ -60,7 +60,15 @@ namespace Features {
 
     void writeClearFile(json & data, fstream & file) {
 
-        file << std::setw(4) << data.dump() << endl;
+        if (file.is_open()) {
+
+            file << std::setw(4) << data.dump() << endl;
+
+            if (file.fail()) { cout << "writing fail" << endl; }
+            else { cout << "writing success" << endl; }
+        }
+        else { cout << "stream not open" << endl; }
+        
         file.flush();
         file.close();
     }
