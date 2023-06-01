@@ -23,7 +23,7 @@ namespace Commands {
         
         CodeValues parameters = Features::getCodeValues();
         
-        fstream file(fileName.c_str(), fstream::out);
+        fstream file(fileName.c_str(), fstream::out | fstream::app);
         json data;
 
         if (file.peek() != fstream::traits_type::eof()) {
@@ -90,7 +90,7 @@ namespace Commands {
 
         long currentTime_s = time_point_cast<seconds>(system_clock::now()).time_since_epoch().count();
 
-        fstream file(fileName.c_str(), fstream::in | fstream::out | fstream::trunc | fstream::app);
+        fstream file(fileName.c_str(), fstream::out | fstream::app | fstream::trunc);
         json data;
 
         if (file.peek() != fstream::traits_type::eof()) {
@@ -118,7 +118,7 @@ namespace Commands {
 
         string givenBrand = Features::getBrandName();
 
-        fstream file(fileName.c_str(), fstream::in | fstream::out | fstream::trunc | fstream::app);
+        fstream file(fileName.c_str(), fstream::out | fstream::app | fstream::trunc);
         json data;
 
         if (file.peek() != fstream::traits_type::eof()) {
