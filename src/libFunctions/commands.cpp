@@ -1,6 +1,5 @@
 #include <fstream>
 using std::fstream;
-using std::ifstream;
 #include <nlohmann/json.hpp>
 using json = nlohmann::json;
 #include <chrono>
@@ -22,18 +21,12 @@ namespace Commands {
     void newCode() {
         
         CodeValues parameters = Features::getCodeValues();
-        
-        fstream file(fileName.c_str(), fstream::out | fstream::app);
-        json data;
 
-        if (file.peek() != fstream::traits_type::eof()) {
-            data = json::parse(file);
-        }
+        fstream file(fileName.c_str(), fstream::app);
         
         json entry = { {"BRAND", parameters.brandName}, {"CODE", parameters.coupon}, {"EXPIRY", parameters.date}, {"EFFECT", parameters.effect} };
-        data.push_back(entry);
 
-        Features::writeClearFile(data, file);
+        Features::writeClearFile(entry, file);
         cout << "Added." << endl;
     }
 
@@ -41,10 +34,10 @@ namespace Commands {
 
         string givenBrand = Features::getBrandName();
 
-        ifstream file(fileName.c_str());
+        fstream file(fileName.c_str(), fstream::in);
         json data;
 
-        if (file.peek() != ifstream::traits_type::eof()) {
+        if (file.peek() != fstream::traits_type::eof()) {
             data = json::parse(file);
         }
         else {
@@ -65,10 +58,10 @@ namespace Commands {
     }
 
     void viewAll() {
-        ifstream file(fileName.c_str());
+        fstream file(fileName.c_str(), fstream::in);
         json data;
 
-        if (file.peek() != ifstream::traits_type::eof()) {
+        if (file.peek() != fstream::traits_type::eof()) {
             data = json::parse(file);
         }
         else {
@@ -90,7 +83,7 @@ namespace Commands {
 
         long currentTime_s = time_point_cast<seconds>(system_clock::now()).time_since_epoch().count();
 
-        fstream file(fileName.c_str(), fstream::out | fstream::app | fstream::trunc);
+        fstream file(fileName.c_str(), fstream::out);
         json data;
 
         if (file.peek() != fstream::traits_type::eof()) {
@@ -118,7 +111,7 @@ namespace Commands {
 
         string givenBrand = Features::getBrandName();
 
-        fstream file(fileName.c_str(), fstream::out | fstream::app | fstream::trunc);
+        fstream file(fileName.c_str(), fstream::out);
         json data;
 
         if (file.peek() != fstream::traits_type::eof()) {
