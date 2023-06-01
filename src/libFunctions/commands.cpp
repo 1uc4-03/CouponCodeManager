@@ -23,7 +23,7 @@ namespace Commands {
         
         CodeValues parameters = Features::getCodeValues();
         
-        fstream file(fileName, fstream::in | fstream::out | fstream::trunc);
+        fstream file(fileName.c_str(), fstream::in | fstream::out | fstream::trunc);
         json data;
 
         if (file.peek() != fstream::traits_type::eof()) {
@@ -41,7 +41,7 @@ namespace Commands {
 
         string givenBrand = Features::getBrandName();
 
-        ifstream file(fileName);
+        ifstream file(fileName.c_str());
         json data;
 
         if (file.peek() != ifstream::traits_type::eof()) {
@@ -54,7 +54,7 @@ namespace Commands {
         }
         file.close();
 
-        for (auto entry : data) {
+        for (auto & entry : data) {
 
             if (entry.at("BRAND") == givenBrand) {
 
@@ -65,7 +65,7 @@ namespace Commands {
     }
 
     void viewAll() {
-        ifstream file(fileName);
+        ifstream file(fileName.c_str());
         json data;
 
         if (file.peek() != ifstream::traits_type::eof()) {
@@ -78,8 +78,10 @@ namespace Commands {
         }
         file.close();
 
-        for (auto entry : data) {
+        for (auto & entry : data) {
+
             cout << entry.dump() << endl;
+
         }
         cout << endl;
     }
@@ -88,7 +90,7 @@ namespace Commands {
 
         long currentTime_s = time_point_cast<seconds>(system_clock::now()).time_since_epoch().count();
 
-        fstream file(fileName, fstream::in | fstream::out | fstream::trunc);
+        fstream file(fileName.c_str(), fstream::in | fstream::out | fstream::trunc);
         json data;
 
         if (file.peek() != fstream::traits_type::eof()) {
@@ -100,7 +102,7 @@ namespace Commands {
             return;
         }
 
-        for (auto entry : data) {
+        for (auto & entry : data) {
 
             if (Features::dateConversion_s(entry.at("EXPIRY")) < currentTime_s) {
 
@@ -116,7 +118,7 @@ namespace Commands {
 
         string givenBrand = Features::getBrandName();
 
-        fstream file(fileName, fstream::in | fstream::out | fstream::trunc);
+        fstream file(fileName.c_str(), fstream::in | fstream::out | fstream::trunc);
         json data;
 
         if (file.peek() != fstream::traits_type::eof()) {
@@ -128,7 +130,7 @@ namespace Commands {
             return;
         }
 
-        for (auto entry : data) {
+        for (auto & entry : data) {
             
             if (entry.at("BRAND") == givenBrand) {
 
