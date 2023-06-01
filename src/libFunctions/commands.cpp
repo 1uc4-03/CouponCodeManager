@@ -27,7 +27,6 @@ namespace Commands {
         json entry = { {"BRAND", parameters.brandName}, {"CODE", parameters.coupon}, {"EXPIRY", parameters.date}, {"EFFECT", parameters.effect} };
 
         Features::writeClearFile(entry, file);
-        cout << "Added." << endl;
     }
 
     void getCode() {
@@ -104,7 +103,7 @@ namespace Commands {
         }
 
         Features::writeClearFile(data, file);
-        cout << "deleted." << endl;
+        cout << "Deleted.\n" << endl;
     }
 
     void deleteBrand() {
@@ -132,6 +131,6 @@ namespace Commands {
         }
 
         Features::writeClearFile(data, file);
-        cout << "deleted." << endl;
+        cout << "Deleted.\n" << endl;
     }
 }

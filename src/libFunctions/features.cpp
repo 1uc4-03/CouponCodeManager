@@ -62,12 +62,12 @@ namespace Features {
 
         if (file.is_open()) {
 
-            file << std::setw(4) << data.dump() << endl;
+            file << data.dump(4) << endl;
 
-            if (file.fail()) { cout << "writing fail" << endl; }
-            else { cout << "writing success" << endl; }
+            if (file.fail()) { cout << "Writing failed.\n" << endl; }
+            else { cout << "Writing succeeded.\n" << endl; }
         }
-        else { cout << "stream not open" << endl; }
+        else { cout << "Stream is not open.\n" << endl; }
         
         file.flush();
         file.close();
