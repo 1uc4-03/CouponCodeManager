@@ -70,12 +70,8 @@ namespace Commands {
         }
         file.close();
 
-        cout << "All Codes:" << endl;
-        for (auto & entry : data) {
-
-            cout << entry.dump(4) << endl;
-
-        }
+        cout << "All Codes:\n" << endl;
+        cout << data.dump(4) << endl;
         cout << endl;
     }
 

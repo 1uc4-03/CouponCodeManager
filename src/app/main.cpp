@@ -1,21 +1,11 @@
 #include <iostream>
-using std::cout;
-using std::cin;
-using std::endl;
-#include <fstream>
-using std::fstream;
+#include <limits>
+using namespace std;
 
 #include "commands.h"
 
 
-void createFile() {
-    fstream file(Commands::fileName, fstream::in | fstream::out | fstream::trunc);
-    file.close();
-}
-
 int main() {
-
-    createFile();
 
     cout << Commands::displayText << endl;
     char command;
@@ -23,9 +13,8 @@ int main() {
     for (;;) {
 
         cout << "Input command: ";
-        cin >> command;
-        cin.clear();
-        fflush(stdin);
+        cin.get(command);
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');
 
         if (Commands::commands.find(command) != Commands::commands.end()) {
             Commands::commands[command]();

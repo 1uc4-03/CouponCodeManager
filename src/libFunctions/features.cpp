@@ -59,8 +59,6 @@ namespace Features {
         }
 
         std::transform(brandName.begin(), brandName.end(), brandName.begin(), ::toupper);
-        std::transform(coupon.begin(), coupon.end(), coupon.begin(), ::toupper);
-        std::transform(effect.begin(), effect.end(), effect.begin(), ::toupper);
 
         return { brandName, coupon, effect, date };
     }
