@@ -23,21 +23,35 @@ namespace Commands {
         
         CodeValues parameters = Features::getCodeValues();
         
-        fstream file(fileName);
-        json data = json::parse(file);
+        fstream file(fileName, fstream::in | fstream::out);
+        json data;
 
+        if (file.peek() != fstream::traits_type::eof()) {
+            data = json::parse(file);
+        }
+        
         json entry = { {"BRAND", parameters.brandName}, {"CODE", parameters.coupon}, {"EXPIRY", parameters.date}, {"EFFECT", parameters.effect} };
         data.push_back(entry);
 
         Features::writeClearFile(data, file);
+        cout << "Added." << endl;
     }
 
     void getCode() {
 
         string givenBrand = Features::getBrandName();
 
-        ifstream file(fileName);
-        json data = json::parse(file);
+        ifstream file(fileName, fstream::in);
+        json data;
+
+        if (file.peek() != ifstream::traits_type::eof()) {
+            data = json::parse(file);
+        }
+        else {
+            cout << "Empty file." << endl;
+            file.close();
+            return;
+        }
         file.close();
 
         for (auto entry : data) {
@@ -52,7 +66,16 @@ namespace Commands {
 
     void viewAll() {
         ifstream file(fileName);
-        json data = json::parse(file);
+        json data;
+
+        if (file.peek() != ifstream::traits_type::eof()) {
+            data = json::parse(file);
+        }
+        else {
+            cout << "Empty file." << endl;
+            file.close();
+            return;
+        }
         file.close();
 
         for (auto entry : data) {
@@ -65,8 +88,17 @@ namespace Commands {
 
         long currentTime_s = time_point_cast<seconds>(system_clock::now()).time_since_epoch().count();
 
-        fstream file(fileName);
-        json data = json::parse(file);
+        fstream file(fileName, fstream::trunc);
+        json data;
+
+        if (file.peek() != fstream::traits_type::eof()) {
+            data = json::parse(file);
+        }
+        else {
+            cout << "Empty file." << endl;
+            file.close();
+            return;
+        }
 
         for (auto entry : data) {
 
@@ -84,8 +116,17 @@ namespace Commands {
 
         string givenBrand = Features::getBrandName();
 
-        fstream file(fileName);
-        json data = json::parse(file);
+        fstream file(fileName, fstream::trunc);
+        json data;
+
+        if (file.peek() != fstream::traits_type::eof()) {
+            data = json::parse(file);
+        }
+        else {
+            cout << "Empty file." << endl;
+            file.close();
+            return;
+        }
 
         for (auto entry : data) {
             

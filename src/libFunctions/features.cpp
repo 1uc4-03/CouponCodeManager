@@ -53,15 +53,15 @@ namespace Features {
         return { brandName, coupon, effect, date };
     }
 
-    void writeClearFile(json const & data, fstream & file) {
+    void writeClearFile(json & data, fstream & file) {
 
-        file.clear();
         file << data;
         file.close();
     }
 
     string getBrandName() {
 
+        cout << "Enter brand name: ";
         string givenBrand;
         cin >> givenBrand;
         std::transform(givenBrand.begin(), givenBrand.end(), givenBrand.begin(), ::toupper);
