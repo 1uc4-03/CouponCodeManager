@@ -50,7 +50,7 @@ namespace Commands {
 
             if (entry.at("BRAND") == givenBrand) {
 
-                cout << entry.dump() << endl;
+                cout << entry.dump(4) << endl;
             }
         }
         cout << endl;
@@ -70,9 +70,10 @@ namespace Commands {
         }
         file.close();
 
+        cout << "All Codes:" << endl;
         for (auto & entry : data) {
 
-            cout << entry.dump() << endl;
+            cout << entry.dump(4) << endl;
 
         }
         cout << endl;

@@ -11,6 +11,7 @@ using std::cout;
 using std::cin;
 using std::endl;
 #include <algorithm>
+#include <exception>
 
 #include "commands.h"
 #include "timeparser.h"
@@ -29,26 +30,32 @@ namespace Features {
         return time_point_cast<seconds>(date_tp).time_since_epoch().count();
     }
 
-    CodeValues getCodeValues() {
+    CodeValues getCodeValues(string brandName = "", string coupon = "", string effect = "", string date = "") {
 
-        string brandName;
-        string coupon;
-        string effect;
-        string date;
-
-        cout << "Enter the brand's name: ";
-        cin >> brandName;
-        cout << "Enter the coupon code: ";
-        cin >> coupon;
-        cout << "Enter the effect of the code: ";
-        cin >> effect;
-        cout << "Enter the date of expiry (dd/mm/yyyy): ";
-        cin >> date;
+        if (brandName.empty()) {
+            cout << "Enter the brand's name: ";
+            std::getline(cin, brandName);
+        }
+        if (coupon.empty()) {
+            cout << "Enter the coupon code: ";
+            std::getline(cin, coupon);
+        }
+        if (effect.empty()) {
+            cout << "Enter the effect of the code: ";
+            std::getline(cin, effect);
+        }
+        if (date.empty()) {
+            cout << "Enter the date of expiry (dd/mm/yyyy): ";
+            std::getline(cin, date);
+        }
         cout << endl;
 
-        if (date.length() != 10) {
-            cout << "Wrong date length. Try again." << endl;
-            return getCodeValues();
+        try {
+            dateConversion_s(date);
+        }
+        catch (std::exception const & e) {
+            cout << "Invalid date.\n" << e.what() << endl;
+            return getCodeValues(brandName, coupon, effect);
         }
 
         std::transform(brandName.begin(), brandName.end(), brandName.begin(), ::toupper);
@@ -75,9 +82,9 @@ namespace Features {
 
     string getBrandName() {
 
-        cout << "Enter brand name: ";
+        cout << "Enter the brand name: ";
         string givenBrand;
-        cin >> givenBrand;
+        std::getline(cin, givenBrand);
         std::transform(givenBrand.begin(), givenBrand.end(), givenBrand.begin(), ::toupper);
 
         return givenBrand;

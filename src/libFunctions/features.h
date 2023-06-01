@@ -10,7 +10,7 @@
 
 namespace Features {
 
-    CodeValues getCodeValues();
+    CodeValues getCodeValues(string brandName = "", string coupon = "", string effect = "", string date = "");
     long dateConversion_s(std::string const & date);
     void writeClearFile(nlohmann::json & data, std::fstream & file);
     std::string getBrandName();
