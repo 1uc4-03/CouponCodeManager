@@ -1,4 +1,4 @@
-add_library(Functions commands.cpp commands.h timeparser.cpp timeparser.h)
+add_library(Functions commands.cpp commands.h timeparser.cpp timeparser.h features.cpp features.h)
 
 target_include_directories(Functions PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 

@@ -5,8 +5,12 @@
 #include <string>
 
 
-enum class FileHeader;
-struct CodeValues;
+struct CodeValues {
+    std::string brandName;
+    std::string coupon;
+    std::string effect;
+    std::string date;
+};
 
 namespace Commands {
 
@@ -29,13 +33,6 @@ namespace Commands {
     inline std::string const displayText = "This is the coupon code manager. Manage your coupon codes by using the following commands:\n'n' stores a new code.\n'g' gets a code by brand name.\n'v' displays all coupon codes.\n'e' deletes all expired coupon codes.\n'b' deletes a code by brand name.\n";
 
     inline std::string const fileName = "couponcodes.json";
-}
-
-namespace Features {
-
-    CodeValues getCodeValues();
-    long dateConversion_s(std::string const & date);
-
 }
 
 #endif // COUPON_CODE_MANAGER_COMMANDS_H

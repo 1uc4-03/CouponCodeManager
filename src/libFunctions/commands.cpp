@@ -1,7 +1,6 @@
 #include <fstream>
 using std::fstream;
 using std::ifstream;
-using std::ofstream;
 #include <nlohmann/json.hpp>
 using json = nlohmann::json;
 #include <chrono>
@@ -12,22 +11,15 @@ using std::string;
 using std::cout;
 using std::cin;
 using std::endl;
-#include <algorithm>
 
 #include "commands.h"
 #include "timeparser.h"
+#include "features.h"
 
-
-struct CodeValues {
-    string brandName;
-    string coupon;
-    string effect;
-    string date;
-};
 
 namespace Commands {
 
-    void newCode(){
+    void newCode() {
         
         CodeValues parameters = Features::getCodeValues();
         
@@ -35,23 +27,41 @@ namespace Commands {
         json data = json::parse(file);
 
         json entry = { {"BRAND", parameters.brandName}, {"CODE", parameters.coupon}, {"EXPIRY", parameters.date}, {"EFFECT", parameters.effect} };
-        data[data.size()] = entry;
+        data.push_back(entry);
 
-        file.clear();
-        file << data;
+        Features::writeClearFile(data, file);
+    }
 
+    void getCode() {
+
+        string givenBrand = Features::getBrandName();
+
+        ifstream file(fileName);
+        json data = json::parse(file);
         file.close();
+
+        for (auto entry : data) {
+
+            if (entry.at("BRAND") == givenBrand) {
+
+                cout << entry.dump() << endl;
+            }
+        }
+        cout << endl;
     }
 
-    void getCode(){
+    void viewAll() {
+        ifstream file(fileName);
+        json data = json::parse(file);
+        file.close();
 
+        for (auto entry : data) {
+            cout << entry.dump() << endl;
+        }
+        cout << endl;
     }
 
-    void viewAll(){
-
-    }
-
-    void deleteExpired(){
+    void deleteExpired() {
 
         long currentTime_s = time_point_cast<seconds>(system_clock::now()).time_since_epoch().count();
 
@@ -59,57 +69,33 @@ namespace Commands {
         json data = json::parse(file);
 
         for (auto entry : data) {
+
             if (Features::dateConversion_s(entry.at("EXPIRY")) < currentTime_s) {
 
                 data.erase(entry);
             }
         }
+
+        Features::writeClearFile(data, file);
         cout << "deleted." << endl;
     }
 
-    void deleteBrand(){
+    void deleteBrand() {
 
-        string brand;
-        cin >> brand;
+        string givenBrand = Features::getBrandName();
 
+        fstream file(fileName);
+        json data = json::parse(file);
+
+        for (auto entry : data) {
+            
+            if (entry.at("BRAND") == givenBrand) {
+
+                data.erase(entry);
+            }
+        }
+
+        Features::writeClearFile(data, file);
+        cout << "deleted." << endl;
     }
-}
-
-namespace Features {
-
-    long dateConversion_s(string const & date) {
-
-        int year = std::stoi(date.substr(6, 4));
-        int month = std::stoi(date.substr(3, 2));
-        int day = std::stoi(date.substr(0, 2));
-
-        system_clock::time_point date_tp = ParseTime::createDateTime(year, month, day, 23, 59, 59);
-
-        return time_point_cast<seconds>(date_tp).time_since_epoch().count();
-    }
-
-    CodeValues getCodeValues() {
-
-        string brandName;
-        string coupon;
-        string effect;
-        string date;
-
-        cout << "Enter the brand's name: ";
-        cin >> brandName;
-        cout << "Enter the coupon code: ";
-        cin >> coupon;
-        cout << "Enter the effect of the code: ";
-        cin >> effect;
-        cout << "Enter the date of expiry (dd/mm/yyyy): ";
-        cin >> date;
-        cout << endl;
-
-        std::transform(brandName.begin(), brandName.end(), brandName.begin(), ::toupper);
-        std::transform(coupon.begin(), coupon.end(), coupon.begin(), ::toupper);
-        std::transform(effect.begin(), effect.end(), effect.begin(), ::toupper);
-
-        return {brandName, coupon, effect, date};
-    }
-
 }
