@@ -81,11 +81,11 @@ namespace Commands {
             return;
         }
 
-        for (auto & entry : data) {
+        for (auto & entry : data.items()) {
 
-            if (Features::dateConversion_s(entry.at("EXPIRY")) <= currentTime_s) {
+            if (Features::dateConversion_s(entry.value().at("EXPIRY")) <= currentTime_s) {
 
-                data.erase(entry);
+                data.erase(entry.key());
             }
         }
 
@@ -106,11 +106,11 @@ namespace Commands {
             return;
         }
 
-        for (auto & entry : data) {
+        for (auto & entry : data.items()) {
             
-            if (entry.at("BRAND") == givenBrand) {
+            if (entry.value().at("BRAND") == givenBrand) {
 
-                data.erase(entry);
+                data.erase(entry.key());
             }
         }
 
