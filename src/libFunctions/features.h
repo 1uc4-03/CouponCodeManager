@@ -14,7 +14,8 @@ namespace Features {
     long dateConversion_s(std::string const & date);
     void writeClearFile(nlohmann::json & data, std::fstream & file);
     std::string getBrandName();
-    unsigned int createId();
+    std::string createId();
+    nlohmann::json readFile(std::string const & filename, bool must_not_be_empty = false);
 
 }
 

@@ -11,6 +11,8 @@ using std::cout;
 using std::cin;
 using std::endl;
 #include <algorithm>
+#include <sstream>
+using std::stringstream;
 #include <exception>
 
 #include "commands.h"
@@ -25,6 +27,10 @@ namespace Features {
         int year = std::stoi(date.substr(6, 4));
         int month = std::stoi(date.substr(3, 2));
         int day = std::stoi(date.substr(0, 2));
+
+        if(year < 1900 || month > 12 || day > 31) {
+            throw std::invalid_argument("Not a real date.\n");
+        }
 
         system_clock::time_point date_tp = ParseTime::createDateTime(year, month, day, 23, 59, 59);
 
@@ -53,8 +59,8 @@ namespace Features {
         try {
             dateConversion_s(date);
         }
-        catch (std::exception const & e) {
-            cout << "Invalid date.\n" << e.what() << endl;
+        catch (std::invalid_argument const & e) {
+            cout << e.what() << endl;
             return getCodeValues(brandName, coupon, effect);
         }
 
@@ -89,10 +95,31 @@ namespace Features {
         return givenBrand;
     }
 
-    unsigned int createId() {
+    string createId() {
 
-        static unsigned int id = 0;
-        return id++;
+        static unsigned int id = 1;
+        stringstream ss;
+        ss << id++;
+        return ss.str();
     }
-    
+
+    json readFile(string const & filename, bool must_not_be_empty) {
+
+        fstream infile(filename, fstream::in);
+        json data;
+
+        if (infile.peek() != fstream::traits_type::eof()) {
+            infile >> data;
+        }
+        else {
+            if (must_not_be_empty) {
+                infile.close();
+                throw std::invalid_argument("Empty file.");
+            }
+        }
+        infile.close();
+
+        return data;
+    }
+
 }

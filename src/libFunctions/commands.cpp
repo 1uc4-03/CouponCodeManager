@@ -10,6 +10,7 @@ using std::string;
 using std::cout;
 using std::cin;
 using std::endl;
+#include <exception>
 
 #include "commands.h"
 #include "timeparser.h"
@@ -21,36 +22,26 @@ namespace Commands {
     void newCode() {
         
         CodeValues parameters = Features::getCodeValues();
-
-        fstream file(fileName.c_str(), fstream::out);
-        json data;
-
-        if (file.peek() != fstream::traits_type::eof()) {
-            data = json::parse(file);
-        }
+        json data = Features::readFile(fileName);
         
-        json entry = { {"BRAND", parameters.brandName}, {"CODE", parameters.coupon}, {"EFFECT", parameters.effect}, {"EXPIRY", parameters.date} };
-        data.at(Features::createId()).get_to(entry);
+        fstream outfile(fileName.c_str(), fstream::out);
 
-        Features::writeClearFile(data, file);
+        json entry = { {"BRAND", parameters.brandName}, {"CODE", parameters.coupon}, {"EFFECT", parameters.effect}, {"EXPIRY", parameters.date} };
+        data[Features::createId()] = entry;
+
+        Features::writeClearFile(data, outfile);
     }
 
     void getCode() {
 
         string givenBrand = Features::getBrandName();
 
-        fstream file(fileName.c_str(), fstream::in);
         json data;
-
-        if (file.peek() != fstream::traits_type::eof()) {
-            data = json::parse(file);
-        }
-        else {
-            cout << "Empty file." << endl;
-            file.close();
+        try { data = Features::readFile(fileName, true); }
+        catch (std::invalid_argument const & e) {
+            cout << e.what() << endl;
             return;
         }
-        file.close();
 
         for (auto & entry : data) {
 
@@ -63,18 +54,13 @@ namespace Commands {
     }
 
     void viewAll() {
-        fstream file(fileName.c_str(), fstream::in);
-        json data;
 
-        if (file.peek() != fstream::traits_type::eof()) {
-            data = json::parse(file);
-        }
-        else {
-            cout << "Empty file." << endl;
-            file.close();
+        json data;
+        try { data = Features::readFile(fileName, true); }
+        catch (std::invalid_argument const & e) {
+            cout << e.what() << endl;
             return;
         }
-        file.close();
 
         cout << "All Codes:\n" << endl;
 
@@ -88,15 +74,10 @@ namespace Commands {
 
         long currentTime_s = time_point_cast<seconds>(system_clock::now()).time_since_epoch().count();
 
-        fstream file(fileName.c_str(), fstream::out);
         json data;
-
-        if (file.peek() != fstream::traits_type::eof()) {
-            data = json::parse(file);
-        }
-        else {
-            cout << "Empty file." << endl;
-            file.close();
+        try { data = Features::readFile(fileName, true); }
+        catch (std::invalid_argument const & e) {
+            cout << e.what() << endl;
             return;
         }
 
@@ -108,7 +89,9 @@ namespace Commands {
             }
         }
 
-        Features::writeClearFile(data, file);
+        fstream outfile(fileName.c_str(), fstream::out);
+
+        Features::writeClearFile(data, outfile);
         cout << "Deleted.\n" << endl;
     }
 
@@ -116,15 +99,10 @@ namespace Commands {
 
         string givenBrand = Features::getBrandName();
 
-        fstream file(fileName.c_str(), fstream::out);
         json data;
-
-        if (file.peek() != fstream::traits_type::eof()) {
-            data = json::parse(file);
-        }
-        else {
-            cout << "Empty file." << endl;
-            file.close();
+        try { data = Features::readFile(fileName, true); }
+        catch (std::invalid_argument const & e) {
+            cout << e.what() << endl;
             return;
         }
 
@@ -136,7 +114,9 @@ namespace Commands {
             }
         }
 
-        Features::writeClearFile(data, file);
+        fstream outfile(fileName.c_str(), fstream::out);
+
+        Features::writeClearFile(data, outfile);
         cout << "Deleted.\n" << endl;
     }
 }
