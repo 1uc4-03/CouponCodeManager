@@ -1,5 +1,7 @@
 #include <chrono>
 
+#include "timeparser.h"
+
 namespace ParseTime {
 
     time_t toUTC(std::tm& timeinfo)

@@ -22,11 +22,17 @@ namespace Commands {
         
         CodeValues parameters = Features::getCodeValues();
 
-        fstream file(fileName.c_str(), fstream::app);
-        
-        json entry = { {"BRAND", parameters.brandName}, {"CODE", parameters.coupon}, {"EXPIRY", parameters.date}, {"EFFECT", parameters.effect} };
+        fstream file(fileName.c_str(), fstream::out);
+        json data;
 
-        Features::writeClearFile(entry, file);
+        if (file.peek() != fstream::traits_type::eof()) {
+            data = json::parse(file);
+        }
+        
+        json entry = { {"BRAND", parameters.brandName}, {"CODE", parameters.coupon}, {"EFFECT", parameters.effect}, {"EXPIRY", parameters.date} };
+        data.at(Features::createId()).get_to(entry);
+
+        Features::writeClearFile(data, file);
     }
 
     void getCode() {
@@ -71,7 +77,10 @@ namespace Commands {
         file.close();
 
         cout << "All Codes:\n" << endl;
-        cout << data.dump(4) << endl;
+
+        for (auto & entry : data) {
+            cout << entry.dump(4) << endl;
+        }
         cout << endl;
     }
 
@@ -93,7 +102,7 @@ namespace Commands {
 
         for (auto & entry : data) {
 
-            if (Features::dateConversion_s(entry.at("EXPIRY")) < currentTime_s) {
+            if (Features::dateConversion_s(entry.at("EXPIRY")) <= currentTime_s) {
 
                 data.erase(entry);
             }

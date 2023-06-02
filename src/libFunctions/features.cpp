@@ -15,6 +15,7 @@ using std::endl;
 
 #include "commands.h"
 #include "timeparser.h"
+#include "features.h"
 
 
 namespace Features {
@@ -30,11 +31,10 @@ namespace Features {
         return time_point_cast<seconds>(date_tp).time_since_epoch().count();
     }
 
-    CodeValues getCodeValues(string brandName = "", string coupon = "", string effect = "", string date = "") {
+    CodeValues getCodeValues(string brandName, string coupon, string effect, string date) {
 
         if (brandName.empty()) {
-            cout << "Enter the brand's name: ";
-            std::getline(cin, brandName);
+            brandName = getBrandName();
         }
         if (coupon.empty()) {
             cout << "Enter the coupon code: ";
@@ -58,8 +58,6 @@ namespace Features {
             return getCodeValues(brandName, coupon, effect);
         }
 
-        std::transform(brandName.begin(), brandName.end(), brandName.begin(), ::toupper);
-
         return { brandName, coupon, effect, date };
     }
 
@@ -80,12 +78,21 @@ namespace Features {
 
     string getBrandName() {
 
-        cout << "Enter the brand name: ";
+        cout << "Enter the brand name (no spaces): ";
         string givenBrand;
         std::getline(cin, givenBrand);
+
+        if (givenBrand.find(' ') != string::npos) { return getBrandName(); }
+
         std::transform(givenBrand.begin(), givenBrand.end(), givenBrand.begin(), ::toupper);
 
         return givenBrand;
+    }
+
+    unsigned int createId() {
+
+        static unsigned int id = 0;
+        return id++;
     }
     
 }
