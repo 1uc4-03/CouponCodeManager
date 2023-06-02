@@ -111,12 +111,11 @@ namespace Features {
         if (infile.peek() != fstream::traits_type::eof()) {
             infile >> data;
         }
-        else {
-            if (must_not_be_empty) {
-                infile.close();
-                throw std::invalid_argument("Empty file.");
-            }
+        if (must_not_be_empty || data.empty()) {
+            infile.close();
+            throw std::invalid_argument("Empty file.");
         }
+
         infile.close();
 
         return data;
