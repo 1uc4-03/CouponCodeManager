@@ -22,12 +22,14 @@ using std::stringstream;
 
 namespace Features {
 
+    // convert 'dd/mm/yyy' to seconds since 1900
     long dateConversion_s(string const & date) {
 
         int year = std::stoi(date.substr(6, 4));
         int month = std::stoi(date.substr(3, 2));
         int day = std::stoi(date.substr(0, 2));
 
+        // check if date is valid
         if(year < 1900 || month > 12 || day > 31) {
             throw std::invalid_argument("Not a real date.\n");
         }
@@ -37,6 +39,7 @@ namespace Features {
         return time_point_cast<seconds>(date_tp).time_since_epoch().count();
     }
 
+    // get input data for an entry
     CodeValues getCodeValues(string brandName, string coupon, string effect, string date) {
 
         if (brandName.empty()) {
@@ -67,6 +70,7 @@ namespace Features {
         return { brandName, coupon, effect, date };
     }
 
+    // write json object to file
     void writeClearFile(json & data, fstream & file) {
 
         if (file.is_open()) {
@@ -82,6 +86,7 @@ namespace Features {
         file.close();
     }
 
+    // get brand name user input and convert to upper case
     string getBrandName() {
 
         cout << "Enter the brand name (no spaces): ";
@@ -95,6 +100,7 @@ namespace Features {
         return givenBrand;
     }
 
+    // creates id key for the json object holding the individual entries as values
     string createId() {
 
         static unsigned int id = 1;
@@ -103,6 +109,7 @@ namespace Features {
         return ss.str();
     }
 
+    // read and parse json data from file
     json readFile(string const & filename, bool must_not_be_empty) {
 
         fstream infile(filename, fstream::in);

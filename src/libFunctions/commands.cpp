@@ -19,6 +19,7 @@ using std::endl;
 
 namespace Commands {
 
+    // creates a new json entry and writes it to the file
     void newCode() {
         
         CodeValues parameters = Features::getCodeValues();
@@ -32,6 +33,7 @@ namespace Commands {
         Features::writeClearFile(data, outfile);
     }
 
+    // prints out all the coupon data for a specific brand
     void getCode() {
 
         string givenBrand = Features::getBrandName();
@@ -53,6 +55,7 @@ namespace Commands {
         cout << endl;
     }
 
+    // prints out a list of all stord entries in the file
     void viewAll() {
 
         json data;
@@ -70,6 +73,7 @@ namespace Commands {
         cout << endl;
     }
 
+    // deletes all expired coupon entries
     void deleteExpired() {
 
         long currentTime_s = time_point_cast<seconds>(system_clock::now()).time_since_epoch().count();
@@ -95,6 +99,7 @@ namespace Commands {
         cout << "Deleted.\n" << endl;
     }
 
+    // deletes all entries of a given brand
     void deleteBrand() {
 
         string givenBrand = Features::getBrandName();

@@ -11,6 +11,7 @@ int main() {
     char command;
 
     for (;;) {
+        // Waits for command to be passed in and executes the corresponding function
 
         cout << "Input command: ";
         cin.get(command);
