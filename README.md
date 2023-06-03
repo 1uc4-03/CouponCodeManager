@@ -7,7 +7,7 @@ Version 1.1.1
 
 # Describtion
 
-Manage your tons of coupon and discount codes via this simple and easy to use terminal based application.
+Manage your coupons and discount codes via this simple and easy to use terminal based application.
 The data is not encrypted and is stored in a json file.
 
 
