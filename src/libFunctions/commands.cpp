@@ -28,7 +28,7 @@ namespace Commands {
         fstream outfile(fileName.c_str(), fstream::out);
 
         json entry = { {"BRAND", parameters.brandName}, {"CODE", parameters.coupon}, {"EFFECT", parameters.effect}, {"EXPIRY", parameters.date} };
-        data[Features::createId()] = entry;
+        data[Features::createId(data)] = entry;
 
         Features::writeClearFile(data, outfile);
     }
@@ -37,6 +37,7 @@ namespace Commands {
     void getCode() {
 
         string givenBrand = Features::getBrandName();
+        bool brand_found = false;
 
         json data;
         try { data = Features::readFile(fileName, true); }
@@ -49,9 +50,12 @@ namespace Commands {
 
             if (entry.at("BRAND") == givenBrand) {
 
-                cout << entry.dump(4) << endl;
+                cout << Features::prettyPrintJson(entry) << endl;
+                brand_found = true;
             }
         }
+
+        if (!brand_found) { cout << "No brand with that name exists." << endl; }
         cout << endl;
     }
 
@@ -68,7 +72,8 @@ namespace Commands {
         cout << "All Codes:\n" << endl;
 
         for (auto & entry : data) {
-            cout << entry.dump(4) << endl;
+
+            cout << Features::prettyPrintJson(entry) << endl;
         }
         cout << endl;
     }
@@ -103,6 +108,7 @@ namespace Commands {
     void deleteBrand() {
 
         string givenBrand = Features::getBrandName();
+        bool brand_found = false;
 
         json data;
         try { data = Features::readFile(fileName, true); }
@@ -116,12 +122,19 @@ namespace Commands {
             if (entry.value().at("BRAND") == givenBrand) {
 
                 data.erase(entry.key());
+                brand_found = true;
             }
         }
 
-        fstream outfile(fileName.c_str(), fstream::out);
+        if (brand_found) {
 
-        Features::writeClearFile(data, outfile);
-        cout << "Deleted.\n" << endl;
+            fstream outfile(fileName.c_str(), fstream::out);
+            Features::writeClearFile(data, outfile);
+            cout << "Deleted.\n" << endl;
+        }
+        else {
+            cout << "No brand with that name exists." << endl;
+        }
+        
     }
 }

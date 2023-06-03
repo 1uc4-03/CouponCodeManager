@@ -101,11 +101,18 @@ namespace Features {
     }
 
     // creates id key for the json object holding the individual entries as values
-    string createId() {
+    string createId(json const & data) {
 
-        static unsigned int id = 1;
+        if (data.empty()) { return "0"; }
+
+        auto last_element = data.items().begin();
+        for (auto it = data.items().begin(); it != data.items().end(); ++it) {
+            last_element = it;
+        }
+
+        int id = std::stoi(last_element.key()) + 1;
         stringstream ss;
-        ss << id++;
+        ss << id;
         return ss.str();
     }
 
@@ -118,7 +125,7 @@ namespace Features {
         if (infile.peek() != fstream::traits_type::eof()) {
             infile >> data;
         }
-        if (must_not_be_empty || data.empty()) {
+        if (must_not_be_empty && data.empty()) {
             infile.close();
             throw std::invalid_argument("Empty file.");
         }
@@ -126,6 +133,18 @@ namespace Features {
         infile.close();
 
         return data;
+    }
+
+    // print clean representation of json objects
+    string prettyPrintJson(json const & entry) {
+
+        string str_entry = entry.dump(4);
+        str_entry.erase(remove(str_entry.begin(), str_entry.end(), '{'), str_entry.end());
+        str_entry.erase(remove(str_entry.begin(), str_entry.end(), '}'), str_entry.end());
+        str_entry.erase(remove(str_entry.begin(), str_entry.end(), ','), str_entry.end());
+        str_entry.erase(remove(str_entry.begin(), str_entry.end(), '"'), str_entry.end());
+        
+        return str_entry;
     }
 
 }
